@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args){
+
         Scanner scanner = new Scanner(System.in);
         int L = scanner.nextInt();
         int[] nums = new int[L];
@@ -18,7 +19,6 @@ public class Main {
         for (int i = 0; i < L; i++) {
             nums[i] = scanner.nextInt();
         }
-        solution(L, nums);
     }
 
     public static void solution(int n, int[] nums){

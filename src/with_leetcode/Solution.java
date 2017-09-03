@@ -33,6 +33,41 @@ public class Solution {
 
     }
 
+    public String reverseWords(String s) {
+        Stack<Character> stack_line = new Stack<>();
+        Stack<Character> stack_word = new Stack<>();
+        StringBuilder sb = new StringBuilder();
+        for (Character c :s.toCharArray()) {
+            if (c == ' '){
+                if (stack_line.isEmpty() || stack_line.peek() == ' '){
+                    continue;
+                }
+                else {
+                    stack_line.push(c);
+                }
+            }
+            else {
+                stack_line.push(c);
+            }
+        }
+        if (stack_line.peek() == ' '){
+            stack_line.pop();
+        }
+        while (!stack_line.isEmpty()){
+            if (stack_line.peek() == ' '){
+                sb.append(' ');
+                stack_line.pop();
+                continue;
+            }
+            while (stack_line.peek() != ' '){
+                stack_word.push(stack_line.pop());
+            }
+            while (!stack_word.isEmpty()){
+                sb.append(stack_word.pop());
+            }
+        }
+        return sb.toString();
+    }
 
     String Serialize(TreeNode root) {
         StringBuilder stringBuilder = new StringBuilder();
