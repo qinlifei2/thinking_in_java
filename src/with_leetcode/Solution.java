@@ -10,30 +10,13 @@ public class Solution {
 
     public static void main(String args[]) {
         Solution s1 = new Solution();
-        HashSet<ListNode> test = new HashSet<>();
-//        String res = s1.addBinary("1010", "1011");
-//        System.out.print(res);
-        int[] nums = {3, 4, 5, 1, 2};
-        String[] strs = {"abd", "abdggg", "acfn"};
-        String s = "Hello Wo rld  ";
-        ListNode l1 = new ListNode(1);
-        l1.next = new ListNode(2);
-        l1.next.next = new ListNode(3);
-        l1.next.next.next = new ListNode(4);
-        ListNode l2 = new ListNode(2);
-//        ListNode l3 = new ListNode(3);
-//        l2.next = l3;
-        int[][] num = new int[][]{{0, 0}, {1, 1}, {0, 0}};
-        ArrayList<String> dict = new ArrayList<>();
-        dict.add("leet");
-        dict.add("code");
-        TreeNode root = new TreeNode(-2);
-//        root.left = new TreeNode(2);
-        root.right = new TreeNode(-3);
-//        root.left.left = new TreeNode(3);
-////        root.left.right = new TreeNode(3);
-////        root.right.left = new TreeNode(3);
-////        root.right.right = new TreeNode(3);
+        TreeNode root = new TreeNode(8);
+        root.left = new TreeNode(6);
+        root.right = new TreeNode(10);
+        root.left.left = new TreeNode(5);
+        root.left.right = new TreeNode(7);
+        root.right.left = new TreeNode(9);
+        root.right.right = new TreeNode(11);
 //        root.left.left.left = new TreeNode(4);
 //        root.left.left.right = new TreeNode(5);
 //        root.left.right.left = new TreeNode(4);
@@ -44,26 +27,56 @@ public class Solution {
 //        root.right.right.right = new TreeNode(4);
 //        root.left.left.left.left = new TreeNode(5);
 //        root.left.left.left.right = new TreeNode(5);
-        int[][] test_array = new int[0][0];
-        System.out.println(test_array == null || test_array.length == 0 || test_array[0].length == 0);
-//        System.out.println(s1.StringContain("ABCDEFG","AAAVVVVVD"));
-        RandomListNode head = new RandomListNode(1);
-        RandomListNode node1 = new RandomListNode(2);
-        RandomListNode node2 = new RandomListNode(3);
-        RandomListNode node3 = new RandomListNode(4);
-        RandomListNode node4 = new RandomListNode(5);
-
-        head.next = node1;
-        node1.next = node2;
-        node2.next = node3;
-        node3.next = node4;
-        node1.random = node3;
-        node2.random = node4;
-
-        s1.findMin(nums);
+        Codec codec = new Codec();
+        String root_str = codec.serialize(root);
+        TreeNode root_new = codec.deserialize(root_str);
 
     }
 
+
+    String Serialize(TreeNode root) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (root == null) return stringBuilder.toString();
+        Stack s = new Stack();
+        TreeNode curNode = root;
+        while (!s.empty() || curNode != null) {
+            while (curNode != null) {
+                s.push(curNode);
+                stringBuilder.append(curNode.val).append(",");
+                curNode = curNode.left;
+            }
+            stringBuilder.append('$').append(",");
+            TreeNode temp = (TreeNode) s.pop();
+            curNode = temp.right;
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        return stringBuilder.toString();
+    }
+
+    TreeNode Deserialize(String str) {
+        if (str == null || str.length() == 0)
+            return null;
+        String[] nums = str.split(",");
+        TreeNode root = new TreeNode(Integer.parseInt(nums[0]));
+        int[] length = new int[1];
+        length[0] = 1;
+        root.left = helpFunc(nums, length);
+        root.right = helpFunc(nums, length);
+        return root;
+    }
+    TreeNode helpFunc(String[] nums, int[] length) {
+        if (nums.length==length[0])
+            return null;
+        TreeNode temp = null;
+        if (!nums[length[0]].equals("$")) {
+            temp = new TreeNode(Integer.parseInt(nums[length[0]]));
+        }
+        length[0]++;
+        if (temp==null) return null;
+        temp.left = helpFunc(nums, length);
+        temp.right = helpFunc(nums, length);
+        return temp;
+    }
 
     public int findMin(int[] nums) {
         /**
