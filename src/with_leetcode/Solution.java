@@ -27,10 +27,94 @@ public class Solution {
 //        root.right.right.right = new TreeNode(4);
 //        root.left.left.left.left = new TreeNode(5);
 //        root.left.left.left.right = new TreeNode(5);
-        Codec codec = new Codec();
-        String root_str = codec.serialize(root);
-        TreeNode root_new = codec.deserialize(root_str);
+        System.out.println(s1.fractionToDecimal(1, 99));
+    }
 
+
+    public String fractionToDecimal(int numerator, int denominator) {
+        StringBuilder sb = new StringBuilder();
+        if ((numerator < 0 && denominator > 0) || (numerator > 0 && denominator < 0)){
+            sb.append("-");
+        }
+        numerator = Math.abs(numerator);
+        denominator = Math.abs(denominator);
+        int intPart = numerator / denominator;
+        sb.append(intPart);
+        numerator -= intPart;
+        if (numerator == 0){
+            return sb.toString();
+        }
+        numerator *= 10;
+        sb.append(".");
+        HashSet<Integer> remaindersSet = new HashSet<>();
+        ArrayList<Integer> remaindersList = new ArrayList<>();
+        int repeatStart = -1;
+        while (numerator < denominator){
+            remaindersList.add(0);
+            numerator *= 10;
+        }
+        numerator /= 10;
+        while (true){
+            numerator *= 10;
+            int curRemainder = numerator / denominator;
+            numerator -= curRemainder * denominator;
+            if (numerator == 0){
+                remaindersList.add(curRemainder);
+                break;
+            }
+            else if (remaindersSet.contains(curRemainder)){
+                repeatStart = curRemainder;
+                break;
+            }
+            else {
+                remaindersSet.add(curRemainder);
+                remaindersList.add(curRemainder);
+            }
+        }
+        for (int i = 0; i < remaindersList.size(); i++) {
+            if (remaindersList.get(i) == repeatStart){
+                sb.append("(");
+            }
+            sb.append(remaindersList.get(i));
+        }
+        if (repeatStart != -1)
+            sb.append(")");
+        return sb.toString();
+    }
+
+
+    public int findPeakElement(int[] nums) {
+        int start = 0;
+        if (nums.length == 0 || nums == null){
+            return -1;
+        }
+        if (nums.length == 1){
+            return 0;
+        }
+        if (nums[start] > nums[start + 1]){
+            return start;
+        }
+        int end = nums.length - 1;
+        if (nums[end] > nums[end - 1]){
+            return end;
+        }
+        start += 1;
+        end -= 1;
+        while (start <= end){
+            int mid = (start + end) / 2;
+            if (nums[mid] > nums[mid + 1] && nums[mid] > nums[mid - 1]){
+                return mid;
+            }
+            else {
+                if (nums[mid] > nums[mid + 1]){
+                    end = mid - 1;
+                }
+                else {
+                    start = mid + 1;
+                }
+            }
+        }
+        return -1;
     }
 
     public String reverseWords(String s) {
