@@ -27,7 +27,7 @@ public class Solution {
 //        root.right.right.right = new TreeNode(4);
 //        root.left.left.left.left = new TreeNode(5);
 //        root.left.left.left.right = new TreeNode(5);
-        System.out.println(s1.fractionToDecimal(1, 99));
+        System.out.println(s1.fractionToDecimal(1, 90));
     }
 
 
@@ -44,40 +44,31 @@ public class Solution {
         if (numerator == 0){
             return sb.toString();
         }
-        numerator *= 10;
+        int repeatPos = -1;
+        int curRemainder = 0;
         sb.append(".");
-        HashSet<Integer> remaindersSet = new HashSet<>();
+        HashMap<Integer, Integer> numeratorsSet = new HashMap<>();
         ArrayList<Integer> remaindersList = new ArrayList<>();
-        int repeatStart = -1;
-        while (numerator < denominator){
-            remaindersList.add(0);
+        while (numerator != 0){
             numerator *= 10;
-        }
-        numerator /= 10;
-        while (true){
-            numerator *= 10;
-            int curRemainder = numerator / denominator;
+            curRemainder = numerator / denominator;
             numerator -= curRemainder * denominator;
-            if (numerator == 0){
-                remaindersList.add(curRemainder);
-                break;
-            }
-            else if (remaindersSet.contains(curRemainder)){
-                repeatStart = curRemainder;
+            if (numeratorsSet.containsKey(numerator * 10 + curRemainder)){
+                repeatPos = numeratorsSet.get(numerator * 10 + curRemainder);
                 break;
             }
             else {
-                remaindersSet.add(curRemainder);
+                numeratorsSet.put(numerator * 10 + curRemainder, remaindersList.size());
                 remaindersList.add(curRemainder);
             }
         }
         for (int i = 0; i < remaindersList.size(); i++) {
-            if (remaindersList.get(i) == repeatStart){
+            if (repeatPos == i){
                 sb.append("(");
             }
             sb.append(remaindersList.get(i));
         }
-        if (repeatStart != -1)
+        if (repeatPos != -1)
             sb.append(")");
         return sb.toString();
     }
