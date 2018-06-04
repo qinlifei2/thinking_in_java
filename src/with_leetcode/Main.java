@@ -1,28 +1,37 @@
 package with_leetcode;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by qlf_workpc on 2017/8/12 0012.
  */
 public class Main {
 
-    public static void main(String[] args){
-
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int L = scanner.nextInt();
-        int[] nums = new int[L];
-        int pos = 0;
-        for (int i = 0; i < L; i++) {
-            nums[i] = scanner.nextInt();
+        HashMap<Character, HashSet> pos = new HashMap<>();
+//A C G T/
+        String line = scanner.nextLine();
+        for (int i = 0; i < line.length(); i++) {
+            if (pos.containsKey(line.charAt(i))){
+                pos.get(line.charAt(i)).add(i);
+            }
+            else {
+                pos.put(line.charAt(i), new HashSet<Integer>());
+                pos.get(line.charAt(i)).add(i);
+            }
+        }
+        char[] cur = new char[]{'A', 'C', 'G', 'T'};
+        for (Character c: cur) {
+            if (!pos.containsKey(c)){
+                System.out.println(1);
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+
+            }
         }
     }
-
-    public static void solution(int n, int[] nums){
-
-    }
-
 }

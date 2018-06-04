@@ -1,5 +1,7 @@
 package with_leetcode;
 
+import org.omg.PortableInterceptor.INACTIVE;
+
 import java.util.*;
 
 
@@ -10,24 +12,58 @@ public class Solution {
 
     public static void main(String args[]) {
         Solution s1 = new Solution();
-        TreeNode root = new TreeNode(8);
-        root.left = new TreeNode(6);
-        root.right = new TreeNode(10);
-        root.left.left = new TreeNode(5);
-        root.left.right = new TreeNode(7);
-        root.right.left = new TreeNode(9);
-        root.right.right = new TreeNode(11);
-//        root.left.left.left = new TreeNode(4);
-//        root.left.left.right = new TreeNode(5);
+        TreeNode root = new TreeNode(0);
+        root.left = new TreeNode(1);
+        root.right = new TreeNode(2);
+        root.left.left = new TreeNode(3);
+        root.left.right = new TreeNode(4);
+        root.right.left = new TreeNode(7);
+        root.right.right = new TreeNode(8);
+        root.left.left.left = new TreeNode(-8);
+        root.left.left.right = new TreeNode(-3);
 //        root.left.right.left = new TreeNode(4);
 //        root.left.right.right = new TreeNode(4);
-//        root.right.left.left = new TreeNode(4);
-//        root.right.left.right = new TreeNode(4);
+        root.right.left.left = new TreeNode(-1);
+        root.right.left.right = new TreeNode(9);
 //        root.right.right.left = new TreeNode(4);
 //        root.right.right.right = new TreeNode(4);
 //        root.left.left.left.left = new TreeNode(5);
 //        root.left.left.left.right = new TreeNode(5);
-        System.out.println(s1.fractionToDecimal(1, 90));
+        System.out.println(s1.findLongestPath(root));
+    }
+
+
+    public int findLongestPath(TreeNode root){
+        int[] longest = new int[]{Integer.MIN_VALUE};
+        findLongestPathCore(root, longest);
+        return longest[0];
+
+    }
+
+    private int findLongestPathCore(TreeNode root, int[] longest) {
+        // 迭代求当前位置到叶子节点路径的最长值的大小
+        // 在回溯的过程中更新max值
+        int curL = Integer.MIN_VALUE;
+        if (root == null){
+            return curL;
+        }
+        else if (root.right == null && root.left == null){
+             return root.val;
+        }
+        else if (root.right == null || root.left == null){
+            int sonPath = root.left == null? findLongestPathCore(root.right, longest): findLongestPathCore(root.left, longest);
+            return sonPath + root.val;
+        }
+        else {
+            int leftPath = findLongestPathCore(root.left, longest);
+            int rightPath = findLongestPathCore(root.right, longest);
+            int curPathLength = leftPath + rightPath;
+            int sonPath = root.val + Math.max(leftPath, rightPath);
+            if (curPathLength > longest[0]){
+                longest[0] = curPathLength;
+            }
+            return sonPath;
+        }
     }
 
 
@@ -36,29 +72,30 @@ public class Solution {
         if ((numerator < 0 && denominator > 0) || (numerator > 0 && denominator < 0)){
             sb.append("-");
         }
-        numerator = Math.abs(numerator);
-        denominator = Math.abs(denominator);
-        int intPart = numerator / denominator;
+        long numeratorL = Math.abs((long)(numerator));
+        long denominatorL = Math.abs((long)(denominator));
+
+        long intPart = (numeratorL / denominatorL);
         sb.append(intPart);
-        numerator -= intPart;
-        if (numerator == 0){
+        numeratorL -=  intPart*denominatorL;
+        if (numeratorL == 0L){
             return sb.toString();
         }
         int repeatPos = -1;
         int curRemainder = 0;
         sb.append(".");
-        HashMap<Integer, Integer> numeratorsSet = new HashMap<>();
+        HashMap<Long, Integer> numeratorsSet = new HashMap<>();
         ArrayList<Integer> remaindersList = new ArrayList<>();
-        while (numerator != 0){
-            numerator *= 10;
-            curRemainder = numerator / denominator;
-            numerator -= curRemainder * denominator;
-            if (numeratorsSet.containsKey(numerator * 10 + curRemainder)){
-                repeatPos = numeratorsSet.get(numerator * 10 + curRemainder);
+        while (numeratorL != 0){
+            numeratorL *= 10;
+            curRemainder = (int)(numeratorL / denominatorL);
+            numeratorL -= curRemainder * denominatorL;
+            if (numeratorsSet.containsKey(numeratorL * 10 + curRemainder)){
+                repeatPos = numeratorsSet.get(numeratorL * 10 + curRemainder);
                 break;
             }
             else {
-                numeratorsSet.put(numerator * 10 + curRemainder, remaindersList.size());
+                numeratorsSet.put(numeratorL * 10 + curRemainder, remaindersList.size());
                 remaindersList.add(curRemainder);
             }
         }
